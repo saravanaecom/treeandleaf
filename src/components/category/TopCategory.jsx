@@ -91,7 +91,7 @@ const TopCategory = (props) => {
           value={categoryValue}
           onChange={handleCategoryClickChange}
           variant="scrollable"
-          scrollButtons={false}
+         scrollButtons="auto"
           aria-label="scrollable prevent tabs example"
           sx={{
             '.MuiTabs-indicator': {

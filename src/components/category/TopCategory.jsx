@@ -82,17 +82,18 @@ const TopCategory = (props) => {
   }, [props.get_catgory_lists]);
 
   return (
-    <Box sx={{ maxWidth: "100%", bgcolor: 'background.paper' }}>
+    <Box sx={{ maxWidth: "100%", overflowX: 'auto',bgcolor: 'background.paper' }}>
       <Container
         maxWidth={{ xs: false, sm: 'xl' }}
-        sx={{ pt: 2, pb: 2, p: { xs: 0, sm: 0 } }}
+        sx={{ pt: 2, pb: 2, p: { xs: 0, sm: 0 } , overflowX: 'auto' }}
       >
         <Tabs
           value={categoryValue}
           onChange={handleCategoryClickChange}
           variant="scrollable"
-         scrollButtons="auto"
+          scrollButtons="auto"
           aria-label="scrollable prevent tabs example"
+          
           sx={{
             '.MuiTabs-indicator': {
               backgroundColor: theme.palette.basecolorCode.main,
@@ -202,6 +203,7 @@ const TopCategory = (props) => {
                 key={index}
                 id={item.Id}
                 value={item.Category}
+                onClick={(event) => handleCategoryClickChange(event, item.Id)}
                 label={
                   <Box id={item.Id} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <Avatar

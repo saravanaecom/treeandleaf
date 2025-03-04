@@ -7,7 +7,7 @@ import { useCart } from '../context/CartContext';
 import { ServerURL } from '../server/serverUrl';
 import { ImagePathRoutes } from '../routes/ImagePathRoutes';
 import Calendar from '../components/datePicker';
-import { API_FetchDeliveryTimes,API_FetchSelectSettingsNew } from '../services/settings';
+import { API_FetchDeliveryTimes,API_FetchSelectSettingsNew,API_Fetchpincode } from '../services/settings';
 import { API_InsertSaleOrderSave } from '../services/checkoutServices';
 import { useTheme } from '@mui/material/styles';
 import CircularLoader from '../components/circular-loader';
@@ -41,6 +41,7 @@ export default function ProductCheckout() {
     const [ExtraDiscount, setExtraDiscount] = React.useState(0);
     const [HandlingCharge, setHandlingCharge] = React.useState(0);
     const [DeliveryFee, setDeliveryFee] = React.useState(0);
+    const [pincodedata,setPincodedata] = React.useState([]);
     const [walletAmount, setwalletAmount] = React.useState(0);
     const [DeliveryTimeList, setDeliveryTimeList] = React.useState([]);
     const [whatsapdata, setwhatsapdata] = React.useState([]);
@@ -58,7 +59,7 @@ export default function ProductCheckout() {
     const [couponId, setCouponId] = React.useState(0);
     const [couponDiscount, setCouponDiscount] =React.useState(0); 
     const [discountAmount, setDiscountAmount] = React.useState(0);
-
+    const [pincodes, setPincodes] = React.useState([]);
     const [AlertOpen, setAlertOpen] = React.useState(false);
     const handleAlertOpen = () => setAlertOpen(true);
 
@@ -122,18 +123,32 @@ export default function ProductCheckout() {
         }
     };
     
-   
-    
-    
 
 
 
-
-
-
+    const FetchPincode = async () => {
+        try {
+            const list = await API_Fetchpincode();
+            if (Array.isArray(list) && list.length > 0) {
+                const extractedPincodes = list.map(item => item.pincode);
+                setPincodes(extractedPincodes);
+                console.log(pincodes);
+                setPincodedata(list); 
+        console.log(pincodedata)
+            } else {
+                console.error("Fetched data is not a valid array or is empty.");
+                setPincodedata([]); 
+            }
+        } catch (error) {
+            setPincodedata([]);
+            console.error("Error fetching categories:", error);
+        }
+    };
     useEffect(() => {
         FetchDeliveryTimes();
         FetchSelectSettingsNew();
+        FetchPincode();
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -267,9 +282,16 @@ export default function ProductCheckout() {
             let WhatsAppUrl = "";
             let OwnerMobileNo = "";
     
+           
+
+
             if (whatsapdata.length > 0) {
                 ({ WhatsAppUrl, OwnerMobileNo } = whatsapdata[0]);
             }
+            
+            
+            const pincode1 = selectedAddress.Pincode.toString().trim();
+         if(pincodes.includes(pincode1)){
     
             const response = await API_InsertSaleOrderSave(master, WhatsAppUrl, OwnerMobileNo);
             console.log(response);
@@ -287,6 +309,18 @@ export default function ProductCheckout() {
                 setShowLoader(false);
                 handleAlertOpen(true);
             }
+             
+
+
+        }
+        else {
+            setLoading(false);
+            setInfoStatus('On Your Area The Delivery is not Avaliable.');
+            setShowLoader(false);
+            handleAlertOpen(true);
+        }
+       
+
         } catch (error) {
             console.error("Error inserting order details:", error);
             setLoading(false);
@@ -294,6 +328,8 @@ export default function ProductCheckout() {
             setShowLoader(false);
             handleAlertOpen(true);
         }
+
+        
     };
     
 

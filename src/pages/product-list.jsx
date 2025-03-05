@@ -25,6 +25,8 @@ import { API_FetchCategorySubCategory } from '../services/categoryServices';
 import { ImagePathRoutes } from '../routes/ImagePathRoutes';
 import { styled } from '@mui/system';
 import { useTheme } from '@mui/material/styles';
+import AllCategory from '../assets/alc.jpg';
+//import PlayStrore from '../../D:\KarthikWorkSpace\ReactProject\treeandleef\ecommercev7_frontend-main\src\assets\alc.jpg';
 
 const drawerWidth = 240;
 
@@ -205,27 +207,73 @@ const ProductList = () => {
     }
   };
 
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const encodedId = queryParams.get('pcid');
+    const encodedName = queryParams.get('pcname');
+    const encodedSId = queryParams.get('pscid');
+    const encodedSName = queryParams.get('pscname');
+  
+    // Guard clause: if there's no encodedId, nothing to do.
+    if (!encodedId) return;
+  
+    // Decode parameters (if they exist)
+    const decodedId = decodeURIComponent(encodedId);
+    const decodedName = encodedName ? decodeURIComponent(encodedName) : null;
+    const decodedSId = encodedSId ? decodeURIComponent(encodedSId) : null;
+    const decodedSName = encodedSName ? decodeURIComponent(encodedSName) : null;
+  
+    // Update state with decoded values
+    setCategoryId(decodedId);
+    setCategoryName(decodedName);
+    setSubCategoryId(decodedSId);
+    setSubCategoryName(decodedSName);
+  
+    // Decode the product category id once
+    const productId = atob(encodedId);
+  
+    if (productId !== 'new_product') {
+      GetCategoryBySubCategory(productId);
+    }
+  
+    // Determine which product list to fetch
+    // Prioritize if a subcategory ID exists; otherwise, use "All Products".
+    if (decodedSId && decodedSName && decodedSName !== "All Products") {
+      setActiveCategory(decodedSName);
+      GetProductListsBySubCategory(atob(encodedSId), Multipleitems, Startindex, PageCount);
+    } else {
+      setActiveCategory("All Products");
+      GetProductLists(productId, Multipleitems, Startindex, PageCount);
+    }
+  
+    // We disable exhaustive-deps here intentionally – ensure you're aware of what dependencies you need.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search, Multipleitems, Startindex, PageCount]);
+
+
+
   // useEffect(() => {
   //   const queryParams = new URLSearchParams(location.search);
   //   const encodedId = queryParams.get('pcid');
   //   const encodedName = queryParams.get('pcname');
   //   const encodedSId = queryParams.get('pscid');
   //   const encodedSName = queryParams.get('pscname');
-  //   setCategoryId(decodeURIComponent(encodedId));
-  //   setCategoryName(decodeURIComponent(encodedName));
-  //   setSubCategoryId(decodeURIComponent(encodedSId));
-  //   setSubCategoryName(decodeURIComponent(encodedSName));
+
+  //   const decodedId = encodedId ? decodeURIComponent(encodedId) : null;
+  //   const decodedName = encodedName ? decodeURIComponent(encodedName) : null;
+  //   const decodedSId = encodedSId ? decodeURIComponent(encodedSId) : null;
+  //   const decodedSName = encodedSName ? decodeURIComponent(encodedSName) : null;
+  
+  //   setCategoryId(decodedId);
+  //   setCategoryName(decodedName);
+  //   setSubCategoryId(decodedSId);
+  //   setSubCategoryName(decodedSName);
+
   //   if(atob(encodedId) !== 'new_product'){
   //     GetCategoryBySubCategory(atob(encodedId));
   //   }    
 
-  //   if (decodedSId) {
-  //     setActiveCategory(decodedSName); // Set active category to pscname (e.g., "SUGAR")
-  //     GetProductListsBySubCategory(atob(encodedSId), Multipleitems, Startindex, PageCount);
-  //   } else {
-  //     setActiveCategory("All Products");
-  //     GetProductLists(atob(encodedId), Multipleitems, Startindex, PageCount);
-  //   }
+  
 
 
   //   if (encodedSId === null) {
@@ -236,6 +284,16 @@ const ProductList = () => {
   //     setActiveCategory("All Products");
   //     GetProductLists(atob(encodedId), Multipleitems, Startindex, PageCount);
   //   }
+
+  //   if (decodedSId) {
+  //     setActiveCategory(decodedSName); // Set active category to pscname (e.g., "SUGAR")
+  //     GetProductListsBySubCategory(atob(encodedSId), Multipleitems, Startindex, PageCount);
+  //   } else {
+  //     setActiveCategory("All Products");
+  //     GetProductLists(atob(encodedId), Multipleitems, Startindex, PageCount);
+  //   }
+
+
   //   //eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [location.search, categoryId, categoryName, Multipleitems, Startindex, PageCount]);
   
@@ -244,38 +302,38 @@ const ProductList = () => {
   /// complete my ise effect 
 
 
-  useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const encodedId = queryParams.get('pcid');
-    const encodedName = queryParams.get('pcname');
-    const encodedSId = queryParams.get('pscid');
-    const encodedSName = queryParams.get('pscname');
+  // useEffect(() => {
+  //   const queryParams = new URLSearchParams(location.search);
+  //   const encodedId = queryParams.get('pcid');
+  //   const encodedName = queryParams.get('pcname');
+  //   const encodedSId = queryParams.get('pscid');
+  //   const encodedSName = queryParams.get('pscname');
   
-    const decodedId = encodedId ? decodeURIComponent(encodedId) : null;
-    const decodedName = encodedName ? decodeURIComponent(encodedName) : null;
-    const decodedSId = encodedSId ? decodeURIComponent(encodedSId) : null;
-    const decodedSName = encodedSName ? decodeURIComponent(encodedSName) : null;
+  //   const decodedId = encodedId ? decodeURIComponent(encodedId) : null;
+  //   const decodedName = encodedName ? decodeURIComponent(encodedName) : null;
+  //   const decodedSId = encodedSId ? decodeURIComponent(encodedSId) : null;
+  //   const decodedSName = encodedSName ? decodeURIComponent(encodedSName) : null;
   
-    setCategoryId(decodedId);
-    setCategoryName(decodedName);
-    setSubCategoryId(decodedSId);
-    setSubCategoryName(decodedSName);
+  //   setCategoryId(decodedId);
+  //   setCategoryName(decodedName);
+  //   setSubCategoryId(decodedSId);
+  //   setSubCategoryName(decodedSName);
   
-    if (atob(encodedId) !== 'new_product') {
-      GetCategoryBySubCategory(atob(encodedId));
-    }
+  //   if (atob(encodedId) !== 'new_product') {
+  //     GetCategoryBySubCategory(atob(encodedId));
+  //   }
   
-    // ✅ Correctly setting active category
-    if (decodedSId) {
-      setActiveCategory(decodedSName); // Set active category to pscname (e.g., "SUGAR")
-      GetProductListsBySubCategory(atob(encodedSId), Multipleitems, Startindex, PageCount);
-    } else {
-      setActiveCategory("All Products");
-      GetProductLists(atob(encodedId), Multipleitems, Startindex, PageCount);
-    }
+  //   // ✅ Correctly setting active category
+  //   if (decodedSId) {
+  //     setActiveCategory(decodedSName); // Set active category to pscname (e.g., "SUGAR")
+  //     GetProductListsBySubCategory(atob(encodedSId), Multipleitems, Startindex, PageCount);
+  //   } else {
+  //     setActiveCategory("All Products");
+  //     GetProductLists(atob(encodedId), Multipleitems, Startindex, PageCount);
+  //   }
   
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.search, categoryId, categoryName, Multipleitems, Startindex, PageCount]);
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [location.search, categoryId, categoryName, Multipleitems, Startindex, PageCount]);
 
 
 
@@ -390,7 +448,7 @@ const ProductList = () => {
                       backgroundColor: '#f7f0fa',
                       marginRight: 10,
                     }}
-                    src={category.ImagePath ? ImagePathRoutes.SubCategoryImagePath + category.ImagePath : "https://www.healthysteps.in/categoryimages/All-categories.png"}
+                    src={category.ImagePath ? ImagePathRoutes.SubCategoryImagePath + category.ImagePath : AllCategory}
                   />
                   <ListItemText
                     primary={category.SubCategory}

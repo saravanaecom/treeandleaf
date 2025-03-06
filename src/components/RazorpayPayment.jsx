@@ -42,7 +42,7 @@ export default function RazorpayPayment({ PlaceOrder, OnlinePayment, payableamou
         }
 
         const options = {
-        
+            key: ServerURL.COMPANY_PAYMENT_RAZ_KEY,
             amount: parseInt(payableamount) * 100,
             currency: ServerURL.CURRENCY,
             name: ServerURL.COMPANY_NAME,

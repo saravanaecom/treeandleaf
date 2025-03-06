@@ -21,7 +21,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import ThemeSettings from '../theme/theme';
 import {ServerURL} from '../server/serverUrl';
-import LocationSelector from "../components/LocationSelector";
+
 
 
 function AppRouter() {
@@ -35,14 +35,7 @@ function AppRouter() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    useEffect(() => {
-        // Check if the location is already set in localStorage
-        const location = localStorage.getItem("location");
-        if (!location) {
-          // If location is not set, navigate to the LocationSelector page
-          window.location.href = "/locationselector"; // Redirect to location selector
-        }
-      }, []);
+  
 
     const FetchMySettings = async () => {
         try {
@@ -92,7 +85,7 @@ function AppRouter() {
                                     <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                                     <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
                                     <Route path="/refund-and-cancellation" element={<RefundAndCancellation />} />
-                                    <Route path="/locationselector" element={<LocationSelector />} />
+                                  
                                     {/* Catch-all Route for 404 */}
                                     <Route path="*" element={<Navigate to="/" replace />} />
                                 </Routes>

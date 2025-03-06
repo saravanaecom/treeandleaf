@@ -290,8 +290,8 @@ export default function ProductCheckout() {
             }
             
             
-            const pincode1 = selectedAddress.Pincode.toString().trim();
-         if(pincodes.includes(pincode1)){
+         //   const pincode1 = selectedAddress.Pincode.toString().trim();
+
     
             const response = await API_InsertSaleOrderSave(master, WhatsAppUrl, OwnerMobileNo);
             console.log(response);
@@ -312,14 +312,8 @@ export default function ProductCheckout() {
              
 
 
-        }
-        else {
-            setLoading(false);
-            setInfoStatus('On Your Area The Delivery is not Avaliable.');
-            setShowLoader(false);
-            handleAlertOpen(true);
-        }
-       
+        
+     
 
         } catch (error) {
             console.error("Error inserting order details:", error);

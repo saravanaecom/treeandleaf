@@ -98,12 +98,12 @@ export default function AppCart({ CartDrawerOpen, setLoginDrawerOpen, handleAuth
     setModalOpen(false);
   };
 
-  useEffect(() => {
-    if(CartDrawerOpen === true){
-      const selectedAddress = JSON.parse(sessionStorage.getItem("selectedAddress"));
-      setSelectedAddress(selectedAddress);
-    }    
-  }, [CartDrawerOpen]);
+  // useEffect(() => {
+  //   if(CartDrawerOpen === true){
+  //     const selectedAddress = JSON.parse(sessionStorage.getItem("selectedAddress"));
+  //     setSelectedAddress(selectedAddress);
+  //   }    
+  // }, [CartDrawerOpen]);
 
   const handleBrowseProducts = () => {
     handleAuthDrawerToggle(false);

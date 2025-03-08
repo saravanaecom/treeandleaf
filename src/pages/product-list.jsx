@@ -197,27 +197,22 @@ const ProductList = () => {
 
     switch (productFilterName) {
       case "Price(Low > High)":
-        sortedProducts.sort((a, b) => a.Price - b.Price);
+        sortedProducts.sort((a, b) => a.price - b.price);
         break;
       case "Price(High > Low)":
-        sortedProducts.sort((a, b) => b.Price - a.Price);
+        sortedProducts.sort((a, b) => b.price - a.price);
         break;
-      case "A-Z":
-        sortedProducts.sort((a, b) => a.Description.localeCompare(b.Description));
+      case "Alphabetical":
+        sortedProducts.sort((a, b) => a.name.localeCompare(b.name));
         break;
-      case "Z-A":
-        sortedProducts.sort((a, b) => b.Description.localeCompare(a.Description));
-        break;
-
-        case "All products":
-          sortedProducts.sort((a, b) => a.Description.localeCompare(b.Description));
+      case "Alphabetical Reverse":
+        sortedProducts.sort((a, b) => b.name.localeCompare(a.name));
         break;
       default:
         sortedProducts = [...productLists];
     }
-     
-  
-    setProductLists(sortedProducts);
+
+    setFilteredProductLists(sortedProducts);
   }, [productFilterName, productLists]);
 
   useEffect(() => {

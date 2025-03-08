@@ -23,7 +23,6 @@ import { API_FetchOfferFastMovingProduct, API_FetchNewProduct, API_FetchProductI
 import { API_FetchCategorySubCategory } from '../services/categoryServices';
 import { ImagePathRoutes } from '../routes/ImagePathRoutes';
 import { styled } from '@mui/system';
-import AllCategory from '../assets/alc.jpg';
 import { useTheme } from '@mui/material/styles';
 
 const drawerWidth = 240;
@@ -344,7 +343,7 @@ const ProductList = () => {
                         },
                       }}
                     >
-                      <Avatar src={category.ImagePath ? ImagePathRoutes.SubCategoryImagePath + category.ImagePath : AllCategory"} alt={category.SubCategory} />
+                      <Avatar src={category.ImagePath ? ImagePathRoutes.SubCategoryImagePath + category.ImagePath : "https://www.healthysteps.in/categoryimages/All-categories.png"} alt={category.SubCategory} />
                       <IconLabel>{category.SubCategory}</IconLabel>
                     </ListItemStyled>
                   ))}

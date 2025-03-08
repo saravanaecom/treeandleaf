@@ -23,6 +23,7 @@ import { API_FetchOfferFastMovingProduct, API_FetchNewProduct, API_FetchProductI
 import { API_FetchCategorySubCategory } from '../services/categoryServices';
 import { ImagePathRoutes } from '../routes/ImagePathRoutes';
 import { styled } from '@mui/system';
+import AllCategory from '../assets/alc.jpg';
 import { useTheme } from '@mui/material/styles';
 
 const drawerWidth = 240;
@@ -165,7 +166,6 @@ const ProductList = () => {
   };
 
   useEffect(() => {
-    // Parse query parameters from the URL
     const queryParams = new URLSearchParams(location.search);
     const encodedId = queryParams.get('pcid');
     const encodedName = queryParams.get('pcname');
@@ -175,49 +175,16 @@ const ProductList = () => {
     setCategoryName(decodeURIComponent(encodedName));
     setSubCategoryId(decodeURIComponent(encodedSId));
     setSubCategoryName(decodeURIComponent(encodedSName));
-
-
     if(atob(encodedId) !== 'new_product'){
       GetCategoryBySubCategory(atob(encodedId));
-    }  
-
-    // Guard clause: if there's no pcid, do nothing
-    if (!encodedId) return;
-  
-    // Decode parameters (if they exist)
-    const decodedId = decodeURIComponent(encodedId);
-    const decodedName = encodedName ? decodeURIComponent(encodedName) : null;
-    const decodedSId = encodedSId ? decodeURIComponent(encodedSId) : null;
-    const decodedSName = encodedSName ? decodeURIComponent(encodedSName) : null;
-  
-    // Update state with the decoded values
-    setCategoryId(decodedId);
-    setCategoryName(decodedName);
-    setSubCategoryId(decodedSId);
-    setSubCategoryName(decodedSName);
-  
-    // Get the product category id from base64 encoding
-    const productId = atob(encodedId);
-  
-    // Fetch category info if not a new_product
-    if (productId !== 'new_product') {
-      GetCategoryBySubCategory(productId);
-    }
-  
-    // Determine which product list to fetch:
-    // If subcategory information is provided and valid, load by subcategory;
-    // otherwise, load all products.
-    if (decodedSId && decodedSName && decodedSName !== "All Products") {
-      setActiveCategory(decodedSName);
-      GetProductListsBySubCategory(atob(encodedSId), Multipleitems, Startindex, PageCount);
-    } else {
+    }    
+    if (encodedSId === null) {
       setActiveCategory("All Products");
-      GetProductLists(productId, Multipleitems, Startindex, PageCount);
+      GetProductLists(atob(encodedId), Multipleitems, Startindex, PageCount);
     }
-  
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search, categoryId, categoryName, Multipleitems, Startindex, PageCount]);
-  
 
   // Function to filter products based on the selected option
   const handleProductFilterChange = (event) => {
@@ -377,7 +344,7 @@ const ProductList = () => {
                         },
                       }}
                     >
-                      <Avatar src={category.ImagePath ? ImagePathRoutes.SubCategoryImagePath + category.ImagePath : "https://www.healthysteps.in/categoryimages/All-categories.png"} alt={category.SubCategory} />
+                      <Avatar src={category.ImagePath ? ImagePathRoutes.SubCategoryImagePath + category.ImagePath : AllCategory"} alt={category.SubCategory} />
                       <IconLabel>{category.SubCategory}</IconLabel>
                     </ListItemStyled>
                   ))}

@@ -335,7 +335,7 @@ const ProductList = () => {
   };
 
   // Apply filtering logic whenever the product list or filter name changes
-  useEffect(() => {
+   useEffect(() => {
     let sortedProducts = [...productLists];
   
     // Apply filter logic only if the product list is populated
@@ -352,6 +352,9 @@ const ProductList = () => {
           break;
         case "Z-A":
           sortedProducts.sort((a, b) => b.Description.localeCompare(a.Description));
+          break;
+          case "All products":
+            sortedProducts.sort((a, b) => a.Description.localeCompare(b.Description));
           break;
         default:
           break;

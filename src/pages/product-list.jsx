@@ -10,6 +10,7 @@ import { ImagePathRoutes } from '../routes/ImagePathRoutes';
 import { styled } from '@mui/system';
 import { useTheme } from '@mui/material/styles';
 import AllCategory from '../assets/alc.jpg';
+//import PlayStrore from '../../D:\KarthikWorkSpace\ReactProject\treeandleef\ecommercev7_frontend-main\src\assets\alc.jpg';
 
 const drawerWidth = 240;
 
@@ -54,7 +55,9 @@ const ProductList = () => {
   const [brands, setBrands] = useState([]);
   const [fullProductList, setFullProductList] = useState([])
   const [selectedBrand, setSelectedBrand] = useState("All brands");
+
   const [productFilterName, setProductFilterName] = useState('All products');
+
 
   const handleScroll = () => {
     if (
@@ -66,12 +69,12 @@ const ProductList = () => {
     }
   };
 
-  //Handle subcategory click function
-  const handleSubCategoryClick = (subCategoryName, SubCategoryId) => {
-    setLoading(true);
-    setSubCategoryId(SubCategoryId);    
-    setActiveCategory(subCategoryName);
 
+  const handleSubCategoryClick = (subCategoryName, SubCategoryId) => {
+    setSubCategoryId(SubCategoryId);
+    setLoading(true); // Start loading
+    setActiveCategory(subCategoryName);
+  
     if (subCategoryName === "All Products") {
       GetProductLists(atob(categoryId), Multipleitems, Startindex, PageCount)
         .finally(() => setLoading(false)); // Stop loading after fetch
@@ -80,9 +83,8 @@ const ProductList = () => {
         .finally(() => setLoading(false)); // Stop loading after fetch
     }
   };
+  
 
-
-  //Handle category by subcategory click function
   const GetCategoryBySubCategory = async (categoryId) => {
     try {
       if (categoryId !== "offer_product" && categoryId !== "related_product") {
@@ -104,71 +106,66 @@ const ProductList = () => {
       return [];
     }
   };
-
-
-  //Get main product lists API
   const GetProductLists = async (categoryId, Multipleitems, Startindex, PageCount) => {
     try {
       setLoading(true);
       setBackdropOpen(true);
       setProductLists([]);
-
-      // Reset state before fetching
-      setOfferProducts(null);
-      setRelatedProducts(null);
-      setNewProducts(null);
-
-      let objProductLists = [];
-
+      let productLists = [];
       if (categoryId === "offer_product") {
-        setActiveCategory("Offer products for you");
+        setRelatedProducts(null);
+        setNewProducts(null);
         setOfferProducts(categoryId);
-        objProductLists = await API_FetchOfferFastMovingProduct();
+        setActiveCategory("Offer products for you");
+        productLists = await API_FetchOfferFastMovingProduct();
       }
       else if (categoryId === "new_product") {
-        setActiveCategory("New products for you");
+        setOfferProducts(null);
+        setRelatedProducts(null);
         setNewProducts(categoryId);
-        objProductLists = await API_FetchNewProduct();
+        setActiveCategory("New products for you");
+        productLists = await API_FetchNewProduct();
       }
       else if (categoryId === "related_product") {
-        setActiveCategory("You might also like products");
+        setOfferProducts(null);
+        setNewProducts(null);
         setRelatedProducts(atob(categoryName));
-        objProductLists = await API_FetchProductIdMoreItems(atob(categoryName));
+        setActiveCategory("You might also like products");
+        productLists = await API_FetchProductIdMoreItems(atob(categoryName));
       }
       else {
-        setActiveCategory("All Products");
-        objProductLists = await API_FetchProductByCategory(categoryId, Multipleitems, Startindex, PageCount);
+        setOfferProducts(null);
+        setRelatedProducts(null);
+        setNewProducts(null);
+        productLists = await API_FetchProductByCategory(categoryId, Multipleitems, Startindex, PageCount);
       }
-
-      setProductLists(objProductLists);
-      console.log("GetProductLists:", objProductLists);
-    } catch (error) {
-      console.error("Error fetching products by category:", error);
-      setProductLists([]);
-    } finally {
+      setProductLists(productLists);
       setLoading(false);
       setBackdropOpen(false);
+    } catch (error) {
+      console.error("Error fetching products by category:", error);
+      setLoading(false);
+      setBackdropOpen(false);
+      setProductLists([]);
     }
   };
 
-
-  //Get product subcategory wise API
   const GetProductListsBySubCategory = async (SubCategoryId, Multipleitems, Startindex, PageCount) => {
     try {
       if (SubCategoryId !== null) {
         setLoading(true);
         setBackdropOpen(true);
         setProductLists([]);
-        const objProductLists = await API_FetchProductBySubCategory(SubCategoryId, Multipleitems, Startindex, PageCount);
-        setFullProductList(objProductLists);
-        setProductLists(objProductLists);        
+        const productLists = await API_FetchProductBySubCategory(SubCategoryId, Multipleitems, Startindex, PageCount);
+        setFullProductList(productLists);
+        setProductLists(productLists);
         const uniqueBrands = Array.from(
-          new Set(objProductLists.map(product => product.Brandname).filter(Boolean))
+          new Set(productLists.map(product => product.Brandname).filter(Boolean))
         );
         setBrands(uniqueBrands);
+
         setLoading(false);
         setBackdropOpen(false);
-        console.log("GetProductListsBySubCategory:", objProductLists);
       }
     } catch (error) {
       console.error("Error fetching products by subcategory:", error);
@@ -179,8 +176,10 @@ const ProductList = () => {
   };
 
 
-  //Handle brand click function
   const handleBrandChange = (event) => {
+
+
+
     const selectedBrandId = event.target.value;
     setSelectedBrand(selectedBrandId);
 
@@ -194,7 +193,6 @@ const ProductList = () => {
       setProductLists(filteredProducts);
     }
   };
-
   useEffect(() => {
     // Parse query parameters from the URL
     const queryParams = new URLSearchParams(location.search);
@@ -230,19 +228,104 @@ const ProductList = () => {
     // If subcategory information is provided and valid, load by subcategory;
     // otherwise, load all products.
     if (decodedSId && decodedSName && decodedSName !== "All Products") {
-      setLoading(true);
       setActiveCategory(decodedSName);
-      GetProductListsBySubCategory(atob(encodedSId), Multipleitems, Startindex, PageCount)
-        .finally(() => setLoading(false));
+      GetProductListsBySubCategory(atob(encodedSId), Multipleitems, Startindex, PageCount);
     } else {
-      setLoading(true);
       setActiveCategory("All Products");
-      GetProductLists(productId, Multipleitems, Startindex, PageCount)
-        .finally(() => setLoading(false));
+      GetProductLists(productId, Multipleitems, Startindex, PageCount);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search]);
+
+
+
+
+  // useEffect(() => {
+  //   const queryParams = new URLSearchParams(location.search);
+  //   const encodedId = queryParams.get('pcid');
+  //   const encodedName = queryParams.get('pcname');
+  //   const encodedSId = queryParams.get('pscid');
+  //   const encodedSName = queryParams.get('pscname');
+
+  //   const decodedId = encodedId ? decodeURIComponent(encodedId) : null;
+  //   const decodedName = encodedName ? decodeURIComponent(encodedName) : null;
+  //   const decodedSId = encodedSId ? decodeURIComponent(encodedSId) : null;
+  //   const decodedSName = encodedSName ? decodeURIComponent(encodedSName) : null;
+
+  //   setCategoryId(decodedId);
+  //   setCategoryName(decodedName);
+  //   setSubCategoryId(decodedSId);
+  //   setSubCategoryName(decodedSName);
+
+  //   if(atob(encodedId) !== 'new_product'){
+  //     GetCategoryBySubCategory(atob(encodedId));
+  //   }    
+
+
+
+
+  //   if (encodedSId === null) {
+  //     setActiveCategory("All Products");
+  //     GetProductLists(atob(encodedId), Multipleitems, Startindex, PageCount);
+  //   }
+  //   if (encodedSName === 'All%20Products') {
+  //     setActiveCategory("All Products");
+  //     GetProductLists(atob(encodedId), Multipleitems, Startindex, PageCount);
+  //   }
+
+  //   if (decodedSId) {
+  //     setActiveCategory(decodedSName); // Set active category to pscname (e.g., "SUGAR")
+  //     GetProductListsBySubCategory(atob(encodedSId), Multipleitems, Startindex, PageCount);
+  //   } else {
+  //     setActiveCategory("All Products");
+  //     GetProductLists(atob(encodedId), Multipleitems, Startindex, PageCount);
+  //   }
+
+
+  //   //eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [location.search, categoryId, categoryName, Multipleitems, Startindex, PageCount]);
+
+
+
+  /// complete my ise effect 
+
+
+  // useEffect(() => {
+  //   const queryParams = new URLSearchParams(location.search);
+  //   const encodedId = queryParams.get('pcid');
+  //   const encodedName = queryParams.get('pcname');
+  //   const encodedSId = queryParams.get('pscid');
+  //   const encodedSName = queryParams.get('pscname');
+
+  //   const decodedId = encodedId ? decodeURIComponent(encodedId) : null;
+  //   const decodedName = encodedName ? decodeURIComponent(encodedName) : null;
+  //   const decodedSId = encodedSId ? decodeURIComponent(encodedSId) : null;
+  //   const decodedSName = encodedSName ? decodeURIComponent(encodedSName) : null;
+
+  //   setCategoryId(decodedId);
+  //   setCategoryName(decodedName);
+  //   setSubCategoryId(decodedSId);
+  //   setSubCategoryName(decodedSName);
+
+  //   if (atob(encodedId) !== 'new_product') {
+  //     GetCategoryBySubCategory(atob(encodedId));
+  //   }
+
+  //   // ✅ Correctly setting active category
+  //   if (decodedSId) {
+  //     setActiveCategory(decodedSName); // Set active category to pscname (e.g., "SUGAR")
+  //     GetProductListsBySubCategory(atob(encodedSId), Multipleitems, Startindex, PageCount);
+  //   } else {
+  //     setActiveCategory("All Products");
+  //     GetProductLists(atob(encodedId), Multipleitems, Startindex, PageCount);
+  //   }
+
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [location.search, categoryId, categoryName, Multipleitems, Startindex, PageCount]);
+
+
+
 
 
   // Function to filter products based on the selected option
@@ -254,30 +337,33 @@ const ProductList = () => {
   // Apply filtering logic whenever the product list or filter name changes
   useEffect(() => {
     let sortedProducts = [...productLists];
-
-    switch (productFilterName) {
-      case "Price(Low > High)":
-        sortedProducts.sort((a, b) => a.Price - b.Price);
-        break;
-      case "Price(High > Low)":
-        sortedProducts.sort((a, b) => b.Price - a.Price);
-        break;
-      case "A-Z":
-        sortedProducts.sort((a, b) => a.Description.localeCompare(b.Description));
-        break;
-      case "Z-A":
-        sortedProducts.sort((a, b) => b.Description.localeCompare(a.Description));
-        break;
-      // case "All products":
-      //   sortedProducts.sort((a, b) => b.Description.localeCompare(a.Description));
-      //   break;
-      default:
-        sortedProducts = [...productLists];
+  
+    // Apply filter logic only if the product list is populated
+    if (productLists && productLists.length > 0) {
+      switch (productFilterName) {
+        case "Price(Low > High)":
+          sortedProducts.sort((a, b) => a.Price - b.Price);
+          break;
+        case "Price(High > Low)":
+          sortedProducts.sort((a, b) => b.Price - a.Price);
+          break;
+        case "A-Z":
+          sortedProducts.sort((a, b) => a.Description.localeCompare(b.Description));
+          break;
+        case "Z-A":
+          sortedProducts.sort((a, b) => b.Description.localeCompare(a.Description));
+          break;
+          case "All products":
+            sortedProducts.sort((a, b) => a.Description.localeCompare(b.Description));
+          break;
+        default:
+          break;
+      }
+      setProductLists(sortedProducts);
     }
-
-
-    setProductLists(sortedProducts);
   }, [productFilterName, productLists]);
+  
+  
 
   useEffect(() => {
     const handleScroll = () => {
@@ -462,25 +548,25 @@ const ProductList = () => {
                       }}
                     >
                       <FormControl fullWidth>
-                        <Select
-                          id="brandFilter"
-                          value={selectedBrand}
-                          size="small"
-                          sx={{
-                            textAlign: "left",
-                            backgroundColor: "white",
-                            borderRadius: "4px",
-                          }}
-                          onChange={handleBrandChange}
-                        >
-                          <MenuItem value="All brands">All brands</MenuItem>
-                          {brands.map((brand, index) => (
-                            <MenuItem key={index} value={brand}>
-                              {brand}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
+                          <Select
+                            id="brandFilter"
+                            value={selectedBrand}
+                            size="small"
+                            sx={{
+                              textAlign: "left",
+                              backgroundColor: "white",
+                              borderRadius: "4px",
+                            }}
+                            onChange={handleBrandChange}
+                          >
+                            <MenuItem value="All brands">All brands</MenuItem>
+                            {brands.map((brand, index) => (
+                              <MenuItem key={index} value={brand}>
+                                {brand}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
                     </Box>
                   )}
 
@@ -555,6 +641,7 @@ const ProductList = () => {
                   )
                 )}
               </div>
+
             </Grid>
           </Grid>
         </Grid>

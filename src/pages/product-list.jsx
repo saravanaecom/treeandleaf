@@ -240,33 +240,33 @@ const ProductList = () => {
   };
 
   // Apply filtering logic whenever the product list or filter name changes
-  useEffect(() => {
-    let sortedProducts = [...productLists];
+  // useEffect(() => {
+  //   let sortedProducts = [...productLists];
 
-    switch (productFilterName) {
-      case "Price(Low > High)":
-        sortedProducts.sort((a, b) => a.Price - b.Price);
-        break;
-      case "Price(High > Low)":
-        sortedProducts.sort((a, b) => b.Price - a.Price);
-        break;
-      case "A-Z":
-        sortedProducts.sort((a, b) => a.Description.localeCompare(b.Description));
-        break;
-      case "Z-A":
-        sortedProducts.sort((a, b) => b.Description.localeCompare(a.Description));
-        break;
+  //   switch (productFilterName) {
+  //     case "Price(Low > High)":
+  //       sortedProducts.sort((a, b) => a.Price - b.Price);
+  //       break;
+  //     case "Price(High > Low)":
+  //       sortedProducts.sort((a, b) => b.Price - a.Price);
+  //       break;
+  //     case "A-Z":
+  //       sortedProducts.sort((a, b) => a.Description.localeCompare(b.Description));
+  //       break;
+  //     case "Z-A":
+  //       sortedProducts.sort((a, b) => b.Description.localeCompare(a.Description));
+  //       break;
 
-      // case "All products":
-      //   sortedProducts.sort((a, b) => b.Description.localeCompare(a.Description));
-      //   break;
-      default:
-        sortedProducts = [...productLists];
-    }
+  //     // case "All products":
+  //     //   sortedProducts.sort((a, b) => b.Description.localeCompare(a.Description));
+  //     //   break;
+  //     default:
+  //       sortedProducts = [...productLists];
+  //   }
 
 
-    setProductLists(sortedProducts);
-  }, [productFilterName, productLists]);
+  //   setProductLists(sortedProducts);
+  // }, [productFilterName, productLists]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -481,7 +481,7 @@ const ProductList = () => {
                       maxWidth: "100%",
                     }}
                   >
-                    <FormControl fullWidth>
+                    {/* <FormControl fullWidth>
                       <Select
                         id="productFilter"
                         value={productFilterName}
@@ -499,7 +499,7 @@ const ProductList = () => {
                         <MenuItem value="A-Z">A-Z</MenuItem>
                         <MenuItem value="Z-A">Z-A</MenuItem>
                       </Select>
-                    </FormControl>
+                    </FormControl> */}
                   </Box>
                 </Box>
               </Box>

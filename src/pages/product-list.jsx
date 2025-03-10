@@ -580,7 +580,7 @@ const ProductList = () => {
                       maxWidth: "100%",
                     }}
                   >
-                    <FormControl fullWidth>
+                    {/* <FormControl fullWidth>
                       <Select
                         id="productFilter"
                         value={productFilterName}
@@ -598,7 +598,7 @@ const ProductList = () => {
                         <MenuItem value="A-Z">A-Z</MenuItem>
                         <MenuItem value="Z-A">Z-A</MenuItem>
                       </Select>
-                    </FormControl>
+                    </FormControl> */}
                   </Box>
                 </Box>
               </Box>

@@ -112,7 +112,7 @@ const ProductList = () => {
     try {
       setLoading(true);
       setBackdropOpen(true);
-      setProductLists([]);
+      //setProductLists([]);
       
       // Reset state before fetching
       setOfferProducts(null);
@@ -157,7 +157,7 @@ const ProductList = () => {
       if (SubCategoryId !== null) {
         setLoading(true);
         setBackdropOpen(true);
-        setProductLists([]);
+        //setProductLists([]);
         const productLists = await API_FetchProductBySubCategory(SubCategoryId, Multipleitems, Startindex, PageCount);
         setFullProductList(productLists);
         setProductLists(productLists);
@@ -179,9 +179,6 @@ const ProductList = () => {
 
 
   const handleBrandChange = (event) => {
-
-
-
     const selectedBrandId = event.target.value;
     setSelectedBrand(selectedBrandId);
 
@@ -342,33 +339,33 @@ const ProductList = () => {
   };
 
   // Apply filtering logic whenever the product list or filter name changes
-  useEffect(() => {
-    let sortedProducts = [...productLists];
+  // useEffect(() => {
+  //   let sortedProducts = [...productLists];
 
-    switch (productFilterName) {
-      case "Price(Low > High)":
-        sortedProducts.sort((a, b) => a.Price - b.Price);
-        break;
-      case "Price(High > Low)":
-        sortedProducts.sort((a, b) => b.Price - a.Price);
-        break;
-      case "A-Z":
-        sortedProducts.sort((a, b) => a.Description.localeCompare(b.Description));
-        break;
-      case "Z-A":
-        sortedProducts.sort((a, b) => b.Description.localeCompare(a.Description));
-        break;
+  //   switch (productFilterName) {
+  //     case "Price(Low > High)":
+  //       sortedProducts.sort((a, b) => a.Price - b.Price);
+  //       break;
+  //     case "Price(High > Low)":
+  //       sortedProducts.sort((a, b) => b.Price - a.Price);
+  //       break;
+  //     case "A-Z":
+  //       sortedProducts.sort((a, b) => a.Description.localeCompare(b.Description));
+  //       break;
+  //     case "Z-A":
+  //       sortedProducts.sort((a, b) => b.Description.localeCompare(a.Description));
+  //       break;
 
-      // case "All products":
-      //   sortedProducts.sort((a, b) => b.Description.localeCompare(a.Description));
-      //   break;
-      default:
-        sortedProducts = [...productLists];
-    }
+  //     // case "All products":
+  //     //   sortedProducts.sort((a, b) => b.Description.localeCompare(a.Description));
+  //     //   break;
+  //     default:
+  //       sortedProducts = [...productLists];
+  //   }
 
 
-    setProductLists(sortedProducts);
-  }, [productFilterName, productLists]);
+  //   setProductLists(sortedProducts);
+  // }, [productFilterName, productLists]);
 
   useEffect(() => {
     const handleScroll = () => {

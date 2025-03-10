@@ -161,10 +161,10 @@ const ProductList = () => {
         const productLists = await API_FetchProductBySubCategory(SubCategoryId, Multipleitems, Startindex, PageCount);
         setFullProductList(productLists);
         setProductLists(productLists);
-        const uniqueBrands = Array.from(
-          new Set(productLists.map(product => product.Brandname).filter(Boolean))
-        );
-        setBrands(uniqueBrands);
+        // const uniqueBrands = Array.from(
+        //   new Set(productLists.map(product => product.Brandname).filter(Boolean))
+        // );
+        // setBrands(uniqueBrands);
 
         setLoading(false);
         setBackdropOpen(false);
@@ -178,20 +178,20 @@ const ProductList = () => {
   };
 
 
-  const handleBrandChange = (event) => {
-    const selectedBrandId = event.target.value;
-    setSelectedBrand(selectedBrandId);
+  // const handleBrandChange = (event) => {
+  //   const selectedBrandId = event.target.value;
+  //   setSelectedBrand(selectedBrandId);
 
-    if (selectedBrandId === "All brands") {
-      setProductLists(fullProductList);
-    } else {
+  //   if (selectedBrandId === "All brands") {
+  //     setProductLists(fullProductList);
+  //   } else {
 
-      const filteredProducts = fullProductList.filter(
-        product => product.Brandname === selectedBrandId
-      );
-      setProductLists(filteredProducts);
-    }
-  };
+  //     const filteredProducts = fullProductList.filter(
+  //       product => product.Brandname === selectedBrandId
+  //     );
+  //     setProductLists(filteredProducts);
+  //   }
+  // };
 
   useEffect(() => {
     // Parse query parameters from the URL
@@ -549,7 +549,7 @@ const ProductList = () => {
                         maxWidth: "100%",
                       }}
                     >
-                      <FormControl fullWidth>
+                      {/* <FormControl fullWidth>
                         <Select
                           id="brandFilter"
                           value={selectedBrand}
@@ -568,7 +568,7 @@ const ProductList = () => {
                             </MenuItem>
                           ))}
                         </Select>
-                      </FormControl>
+                      </FormControl> */}
                     </Box>
                   )}
 
@@ -580,7 +580,7 @@ const ProductList = () => {
                       maxWidth: "100%",
                     }}
                   >
-                    {/* <FormControl fullWidth>
+                    <FormControl fullWidth>
                       <Select
                         id="productFilter"
                         value={productFilterName}
@@ -598,7 +598,7 @@ const ProductList = () => {
                         <MenuItem value="A-Z">A-Z</MenuItem>
                         <MenuItem value="Z-A">Z-A</MenuItem>
                       </Select>
-                    </FormControl> */}
+                    </FormControl>
                   </Box>
                 </Box>
               </Box>

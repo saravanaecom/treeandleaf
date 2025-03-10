@@ -74,7 +74,7 @@ const ProductList = () => {
     setSubCategoryId(SubCategoryId);
     setLoading(true); // Start loading
     setActiveCategory(subCategoryName);
-
+  
     if (subCategoryName === "All Products") {
       GetProductLists(atob(categoryId), Multipleitems, Startindex, PageCount)
         .finally(() => setLoading(false)); // Stop loading after fetch
@@ -83,7 +83,7 @@ const ProductList = () => {
         .finally(() => setLoading(false)); // Stop loading after fetch
     }
   };
-
+  
 
   const GetCategoryBySubCategory = async (categoryId) => {
     try {
@@ -106,65 +106,63 @@ const ProductList = () => {
       return [];
     }
   };
-  
-
   const GetProductLists = async (categoryId, Multipleitems, Startindex, PageCount) => {
     try {
       setLoading(true);
       setBackdropOpen(true);
-      //setProductLists([]);
-      
-      // Reset state before fetching
-      setOfferProducts(null);
-      setRelatedProducts(null);
-      setNewProducts(null);
-  
+      setProductLists([]);
       let productLists = [];
-  
       if (categoryId === "offer_product") {
-        setActiveCategory("Offer products for you");
+        setRelatedProducts(null);
+        setNewProducts(null);
         setOfferProducts(categoryId);
+        setActiveCategory("Offer products for you");
         productLists = await API_FetchOfferFastMovingProduct();
-      } 
+      }
       else if (categoryId === "new_product") {
-        setActiveCategory("New products for you");
+        setOfferProducts(null);
+        setRelatedProducts(null);
         setNewProducts(categoryId);
+        setActiveCategory("New products for you");
         productLists = await API_FetchNewProduct();
-      } 
+      }
       else if (categoryId === "related_product") {
-        setActiveCategory("You might also like products");
+        setOfferProducts(null);
+        setNewProducts(null);
         setRelatedProducts(atob(categoryName));
+        setActiveCategory("You might also like products");
         productLists = await API_FetchProductIdMoreItems(atob(categoryName));
-      } 
+      }
       else {
-        setActiveCategory("All Products");
+        setOfferProducts(null);
+        setRelatedProducts(null);
+        setNewProducts(null);
         productLists = await API_FetchProductByCategory(categoryId, Multipleitems, Startindex, PageCount);
       }
-  
-      setProductLists(productLists || []);
-    } catch (error) {
-      console.error("Error fetching products by category:", error);
-      setProductLists([]);
-    } finally {
+      setProductLists(productLists);
       setLoading(false);
       setBackdropOpen(false);
+    } catch (error) {
+      console.error("Error fetching products by category:", error);
+      setLoading(false);
+      setBackdropOpen(false);
+      setProductLists([]);
     }
   };
-  
 
   const GetProductListsBySubCategory = async (SubCategoryId, Multipleitems, Startindex, PageCount) => {
     try {
       if (SubCategoryId !== null) {
         setLoading(true);
         setBackdropOpen(true);
-        //setProductLists([]);
+        setProductLists([]);
         const productLists = await API_FetchProductBySubCategory(SubCategoryId, Multipleitems, Startindex, PageCount);
         setFullProductList(productLists);
         setProductLists(productLists);
-        // const uniqueBrands = Array.from(
-        //   new Set(productLists.map(product => product.Brandname).filter(Boolean))
-        // );
-        // setBrands(uniqueBrands);
+        const uniqueBrands = Array.from(
+          new Set(productLists.map(product => product.Brandname).filter(Boolean))
+        );
+        setBrands(uniqueBrands);
 
         setLoading(false);
         setBackdropOpen(false);
@@ -178,21 +176,23 @@ const ProductList = () => {
   };
 
 
-  // const handleBrandChange = (event) => {
-  //   const selectedBrandId = event.target.value;
-  //   setSelectedBrand(selectedBrandId);
+  const handleBrandChange = (event) => {
 
-  //   if (selectedBrandId === "All brands") {
-  //     setProductLists(fullProductList);
-  //   } else {
 
-  //     const filteredProducts = fullProductList.filter(
-  //       product => product.Brandname === selectedBrandId
-  //     );
-  //     setProductLists(filteredProducts);
-  //   }
-  // };
 
+    const selectedBrandId = event.target.value;
+    setSelectedBrand(selectedBrandId);
+
+    if (selectedBrandId === "All brands") {
+      setProductLists(fullProductList);
+    } else {
+
+      const filteredProducts = fullProductList.filter(
+        product => product.Brandname === selectedBrandId
+      );
+      setProductLists(filteredProducts);
+    }
+  };
   useEffect(() => {
     // Parse query parameters from the URL
     const queryParams = new URLSearchParams(location.search);
@@ -228,15 +228,11 @@ const ProductList = () => {
     // If subcategory information is provided and valid, load by subcategory;
     // otherwise, load all products.
     if (decodedSId && decodedSName && decodedSName !== "All Products") {
-      setLoading(true);
       setActiveCategory(decodedSName);
-      GetProductListsBySubCategory(atob(encodedSId), Multipleitems, Startindex, PageCount)
-        .finally(() => setLoading(false));
+      GetProductListsBySubCategory(atob(encodedSId), Multipleitems, Startindex, PageCount);
     } else {
-      setLoading(true);
       setActiveCategory("All Products");
-      GetProductLists(productId, Multipleitems, Startindex, PageCount)
-      .finally(() => setLoading(false));
+      GetProductLists(productId, Multipleitems, Startindex, PageCount);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -339,33 +335,33 @@ const ProductList = () => {
   };
 
   // Apply filtering logic whenever the product list or filter name changes
-  // useEffect(() => {
-  //   let sortedProducts = [...productLists];
+  useEffect(() => {
+    let sortedProducts = [...productLists];
 
-  //   switch (productFilterName) {
-  //     case "Price(Low > High)":
-  //       sortedProducts.sort((a, b) => a.Price - b.Price);
-  //       break;
-  //     case "Price(High > Low)":
-  //       sortedProducts.sort((a, b) => b.Price - a.Price);
-  //       break;
-  //     case "A-Z":
-  //       sortedProducts.sort((a, b) => a.Description.localeCompare(b.Description));
-  //       break;
-  //     case "Z-A":
-  //       sortedProducts.sort((a, b) => b.Description.localeCompare(a.Description));
-  //       break;
+    switch (productFilterName) {
+      case "Price(Low > High)":
+        sortedProducts.sort((a, b) => a.Price - b.Price);
+        break;
+      case "Price(High > Low)":
+        sortedProducts.sort((a, b) => b.Price - a.Price);
+        break;
+      case "A-Z":
+        sortedProducts.sort((a, b) => a.Description.localeCompare(b.Description));
+        break;
+      case "Z-A":
+        sortedProducts.sort((a, b) => b.Description.localeCompare(a.Description));
+        break;
 
-  //     // case "All products":
-  //     //   sortedProducts.sort((a, b) => b.Description.localeCompare(a.Description));
-  //     //   break;
-  //     default:
-  //       sortedProducts = [...productLists];
-  //   }
+      // case "All products":
+      //   sortedProducts.sort((a, b) => b.Description.localeCompare(a.Description));
+      //   break;
+      default:
+        sortedProducts = [...productLists];
+    }
 
 
-  //   setProductLists(sortedProducts);
-  // }, [productFilterName, productLists]);
+    setProductLists(sortedProducts);
+  }, [productFilterName, productLists]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -549,26 +545,26 @@ const ProductList = () => {
                         maxWidth: "100%",
                       }}
                     >
-                      {/* <FormControl fullWidth>
-                        <Select
-                          id="brandFilter"
-                          value={selectedBrand}
-                          size="small"
-                          sx={{
-                            textAlign: "left",
-                            backgroundColor: "white",
-                            borderRadius: "4px",
-                          }}
-                          onChange={handleBrandChange}
-                        >
-                          <MenuItem value="All brands">All brands</MenuItem>
-                          {brands.map((brand, index) => (
-                            <MenuItem key={index} value={brand}>
-                              {brand}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl> */}
+                      <FormControl fullWidth>
+                          <Select
+                            id="brandFilter"
+                            value={selectedBrand}
+                            size="small"
+                            sx={{
+                              textAlign: "left",
+                              backgroundColor: "white",
+                              borderRadius: "4px",
+                            }}
+                            onChange={handleBrandChange}
+                          >
+                            <MenuItem value="All brands">All brands</MenuItem>
+                            {brands.map((brand, index) => (
+                              <MenuItem key={index} value={brand}>
+                                {brand}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
                     </Box>
                   )}
 

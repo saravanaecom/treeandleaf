@@ -154,7 +154,7 @@ export default function AppCart({ CartDrawerOpen, setLoginDrawerOpen, handleAuth
       const CartTotalAmount = cartTotalAmountCheck();
       FetchMinimumOrderAmount();
 
-      if (CartTotalAmount >= MinimumOrderAmount) {
+      if (CartTotalAmount >= 0) {
         if (useWallet === true) {
           handleAuthDrawerToggle(false);
           navigate(`/product-checkout?Wallet=${btoa(WalletAmount)}`);

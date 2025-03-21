@@ -405,7 +405,7 @@ export default function ProductCheckout() {
         <>
             <CircularLoader showLoader={showLoader} />
             {OnlinePayment && (
-                <RazorpayPayment PlaceOrder={InsertSaleOrderSave} OnlinePayment={OnlinePayment} payableamount={(TotalPrice + DeliveryFee + HandlingCharge - ExtraDiscount)} usedwalledamount={walletAmount} Customer={selectedAddress}/>
+                <RazorpayPayment PlaceOrder={PlaceOrder} OnlinePayment={OnlinePayment} payableamount={(TotalPrice + DeliveryFee + HandlingCharge - ExtraDiscount)} usedwalledamount={walletAmount} Customer={selectedAddress}/>
             )}
             <AddressChangeModal UserId={UserId} setUserId={setUserId} ModalOpen={ModalOpen} handleChangeAddressClose={handleChangeAddressClose} handleAddressSelect={handleChangeAddress} />
             <Modal

@@ -204,8 +204,8 @@ const AddAddressModal = ({ EditAddressModalOpen = true, AddressModalOpen, handle
             Pincode: addressFields.Pincode ? addressFields.Pincode : defaultAddressDetails.Pincode,
             Landmark: addressFields.Landmark ? addressFields.Landmark : defaultAddressDetails.Landmark,
             AddressType: activeLabel ? activeLabel : defaultAddressDetails.AddressType,
-            lattitude: markerPosition.lat,
-            longitude: markerPosition.lng,
+            Latitude: markerPosition.lat,
+            Langitude: markerPosition.lng,
         };
       
 

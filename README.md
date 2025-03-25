@@ -1,123 +1,70 @@
-# React E-commerce Frontend Application
+# Getting Started with Create React App
 
-This project is a comprehensive React-based e-commerce frontend application with features for product browsing, cart management, and user authentication.
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Repository Structure
+## Available Scripts
 
-The repository is organized as follows:
+In the project directory, you can run:
 
-```
-.
-├── package.json
-├── public
-│   ├── index.html
-│   └── manifest.json
-├── README.md
-├── src
-│   ├── components
-│   │   ├── authentication
-│   │   ├── cart
-│   │   ├── category
-│   │   ├── layouts
-│   │   ├── myAccount
-│   │   ├── slider
-│   │   └── ...
-│   ├── context
-│   ├── pages
-│   ├── redux
-│   ├── routes
-│   ├── services
-│   └── theme
-└── tailwind.config.js
-```
+### `npm start`
 
-Key files and directories:
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-- `src/`: Contains the main application code
-- `src/components/`: Reusable React components
-- `src/pages/`: Individual page components
-- `src/services/`: API service functions
-- `src/routes/`: Routing configuration
-- `src/context/`: React context providers
-- `src/redux/`: Redux store and actions
-- `package.json`: Project dependencies and scripts
-- `tailwind.config.js`: Tailwind CSS configuration
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
-## Usage Instructions
+### `npm test`
 
-### Installation
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-1. Ensure you have Node.js (version 14 or later) installed.
-2. Clone the repository.
-3. Run `npm install` to install dependencies.
+### `npm run build`
 
-### Getting Started
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-1. Start the development server:
-   ```
-   npm start
-   ```
-2. Open `http://localhost:3000` in your browser.
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-### Configuration
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-- Environment variables can be set in a `.env` file in the root directory.
-- API endpoints are configured in `src/routes/APIRoutes.jsx`.
+### `npm run eject`
 
-### Common Use Cases
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-1. Browsing products:
-   - Navigate to the home page to view featured products.
-   - Use the category navigation to filter products.
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-2. Adding items to cart:
-   - On a product detail page, select quantity and click "Add to Cart".
-   - View cart by clicking the cart icon in the header.
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-3. Checkout process:
-   - From the cart, click "Proceed to Checkout".
-   - Fill in shipping details and select payment method.
-   - Confirm order to complete the purchase.
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-### Testing & Quality
+## Learn More
 
-Run tests using:
-```
-npm test
-```
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-### Troubleshooting
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-1. Issue: Products not loading
-   - Check your internet connection
-   - Verify API endpoint configuration in `src/routes/APIRoutes.jsx`
-   - Check browser console for error messages
+### Code Splitting
 
-2. Issue: Cart not updating
-   - Clear browser cache and local storage
-   - Ensure you're logged in (if required)
-   - Verify cart context is properly initialized
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-For debugging:
-- Enable debug mode by setting `DEBUG=true` in `.env`
-- Check browser console for detailed logs
-- Inspect network requests in browser developer tools
+### Analyzing the Bundle Size
 
-## Data Flow
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-The application follows a typical React data flow:
+### Making a Progressive Web App
 
-1. User interacts with the UI (e.g., clicks "Add to Cart")
-2. Event handler in the component is triggered
-3. If necessary, an API call is made to the backend (e.g., `src/services/productListServices.js`)
-4. The component's state or global state (Redux/Context) is updated
-5. React re-renders the affected components
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-```
-[User Interaction] -> [Component] -> [API Service] -> [State Update] -> [Re-render]
-```
+### Advanced Configuration
 
-Important considerations:
-- Cart state is managed using React Context (`src/context/CartContext.js`)
-- Authentication state is handled by Redux (`src/redux/`)
-- API calls are centralized in service files (`src/services/`)
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+
+### Deployment
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+
+### `npm run build` fails to minify
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

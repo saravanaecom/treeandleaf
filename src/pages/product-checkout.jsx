@@ -7,7 +7,7 @@ import { useCart } from '../context/CartContext';
 import { ServerURL } from '../server/serverUrl';
 import { ImagePathRoutes } from '../routes/ImagePathRoutes';
 import Calendar from '../components/datePicker';
-import { API_FetchDeliveryTimes,API_FetchSelectSettingsNew,API_Fetchpincode } from '../services/settings';
+import { API_FetchDeliveryTimes,API_FetchSelectSettingsNew,API_Fetchpincode,API_Fetchdeliverycharges } from '../services/settings';
 import { API_InsertSaleOrderSave } from '../services/checkoutServices';
 import { useTheme } from '@mui/material/styles';
 import CircularLoader from '../components/circular-loader';
@@ -16,6 +16,7 @@ import OrderInfo from '../assets/information.gif';
 import AddressChangeModal from '../components/cart/addressChangeModal';
 import RazorpayPayment from '../components/RazorpayPayment';
 import dayjs from 'dayjs';
+import { getDistance } from 'geolib';
 
 const style = {
     position: 'absolute',
@@ -45,6 +46,7 @@ export default function ProductCheckout() {
     const [walletAmount, setwalletAmount] = React.useState(0);
     const [DeliveryTimeList, setDeliveryTimeList] = React.useState([]);
     const [whatsapdata, setwhatsapdata] = React.useState([]);
+    
     const [DateValue, setDateValue] = React.useState(dayjs());
     const [DeliverytimeId, setDeliverytimeId] = React.useState(0);
     const [Deliverytime, setDeliverytime] = React.useState('');
@@ -62,7 +64,14 @@ export default function ProductCheckout() {
     const [pincodes, setPincodes] = React.useState([]);
     const [AlertOpen, setAlertOpen] = React.useState(false);
     const handleAlertOpen = () => setAlertOpen(true);
+    const [adminlatitude, setAdminlatitude] = React.useState('');
+    const [adminLangitude, setAdminLangitude] = React.useState('');
 
+    const [userlatitude, setUserlatitude] = React.useState('');
+    const [userLangitude, setuserLangitude] = React.useState('');
+    const [distance, setDistance] =  React.useState(0);
+    const [deliverychargelist,  setDeliverychargelist] = React.useState([]);
+    const [deliverycharge,  setDeliveryCharge] = React.useState([]);
     const handleAlertClose = () => {
         if (InfoStatus === 'Your order has been placed') {
             navigate('/');
@@ -86,6 +95,7 @@ export default function ProductCheckout() {
           setModalOpen(true);
         }
     };
+
 
     const handleChangeAddressClose = () => {
         setModalOpen(false);
@@ -111,8 +121,14 @@ export default function ProductCheckout() {
       
     
             if (Array.isArray(list) && list.length > 0) {
-                setwhatsapdata(list); 
-        
+                setwhatsapdata(list);
+                const firstItem = list[0];
+                setAdminlatitude(firstItem.Latitude);
+                console.log(adminlatitude)
+                setAdminLangitude(firstItem.Longitude);
+                  console.log(adminLangitude)
+                
+                
             } else {
                 console.error("Fetched data is not a valid array or is empty.");
                 setwhatsapdata([]); 
@@ -123,8 +139,68 @@ export default function ProductCheckout() {
         }
     };
     
+             
+    const handleCalculateDistance = () => {
+     
+        setUserlatitude(selectedAddress.Latitude);
+        setuserLangitude( selectedAddress.Langitude);
+        const dist = getDistance(
+          { latitude: selectedAddress.Latitude, longitude: selectedAddress.Langitude },
+          { latitude:adminlatitude,longitude:adminLangitude }
+        );
+        const distInKilometers = dist / 1000;
+        setDistance(distInKilometers);
+        console.log(distInKilometers); 
+      };
 
 
+ const handlefetchdeliverycharges = async()=>{
+
+    try {
+        
+        const list = await API_Fetchdeliverycharges();
+        if (Array.isArray(list) && list.length > 0) {
+          
+            setDeliverychargelist(list);
+            
+        } else {
+            console.error("Fetched data is not a valid array or is empty.");
+ 
+        }
+
+    } catch (error) {
+
+        setDeliverychargelist([]);
+        console.error("Error fetching categories:", error);
+        
+    }
+
+      }
+
+
+      const findDeliveryCharge = () => {
+        const chargeData = deliverychargelist.find(item => 
+            distance >= item.StartKM && distance <= item.EndKM
+        );
+    
+        if (chargeData) {
+            setDeliveryCharge(chargeData.DeliveryCharges);
+            console.log(`Delivery Charge: ${chargeData.DeliveryCharges}`);
+        } else {
+            setDeliveryCharge(0);
+            console.log("No matching range found.");
+        }
+    };
+    
+    // Example: setting distance to 11 and finding delivery charge
+    React.useEffect(() => {
+        findDeliveryCharge();
+    }, [distance]); 
+
+
+
+    
+  
 
     const FetchPincode = async () => {
         try {
@@ -148,28 +224,39 @@ export default function ProductCheckout() {
         FetchDeliveryTimes();
         FetchSelectSettingsNew();
         FetchPincode();
+        handlefetchdeliverycharges();
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+     
+
+
 
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
         const encodedWalletAmount = queryParams.get('Wallet');
         let amt = atob(encodedWalletAmount);
-        //setwalletAmount(Number(amt));
-
+        // setwalletAmount(Number(amt));
+    
         let address = JSON.parse(sessionStorage.getItem('selectedAddress'));
-        setSelectedAddress(address);
+        setSelectedAddress(address); 
+    
+    }, [location.search]); 
+    
 
-    }, [location.search]);
-
+    useEffect(() => {
+        if (selectedAddress) {
+            handleCalculateDistance();
+        }
+    }, [selectedAddress,adminlatitude,adminLangitude]);
+    
     useEffect(() => {
         if (cartItems.length > 0) {
             const totalMRP = cartItems.reduce((acc, item) => acc + item.totalMRP, 0);
             const totalPrice = cartItems.reduce((acc, item) => acc + item.totalPrice, 0);
             
             setMRPAmount(totalMRP);
-            setTotalPrice(totalPrice);
+            setTotalPrice(totalPrice );
             setSavingsAmount(totalMRP - totalPrice);
     
             // 🏦 Apply Wallet Discount
@@ -281,18 +368,10 @@ export default function ProductCheckout() {
         try {
             let WhatsAppUrl = "";
             let OwnerMobileNo = "";
-    
-           
-
-
             if (whatsapdata.length > 0) {
                 ({ WhatsAppUrl, OwnerMobileNo } = whatsapdata[0]);
             }
-            
-            
          //   const pincode1 = selectedAddress.Pincode.toString().trim();
-
-    
             const response = await API_InsertSaleOrderSave(master, WhatsAppUrl, OwnerMobileNo);
             console.log(response);
     
@@ -309,12 +388,6 @@ export default function ProductCheckout() {
                 setShowLoader(false);
                 handleAlertOpen(true);
             }
-             
-
-
-        
-     
-
         } catch (error) {
             console.error("Error inserting order details:", error);
             setLoading(false);
@@ -359,12 +432,10 @@ export default function ProductCheckout() {
                 Pincode: selectedAddress.Pincode,
                 lattitude: selectedAddress.Latitude,
                 longitude: selectedAddress.Langitude,
-
                 CompanyRefid: selectedAddress.CompanyRefId,
                 CompanyName: ServerURL.COMPANY_NAME,
                 CompanyMobile: ServerURL.COMPANY_MOBILE,
                 CompanyEmail: ServerURL.COMPANY_EMAIL,
-                
                 SaleDate: DateValue,
                 DeliveryDate: DateValue,
                 DeliveryTime: Deliverytime, 
@@ -381,31 +452,31 @@ export default function ProductCheckout() {
                 ReferalAmount: 0.0,                
                 disper:Number(couponDiscount),
                 discamount:Number(discountAmount),
-                schargeamount: 0,                
+                schargeamount: deliverycharge,                
                 ReferalBalance: 0,
                 coinage: 0,
-                DeliveryCharge: DeliveryFee,
+                DeliveryCharge: deliverycharge,
                 WalletAmount: walletAmount,
                 WalletStatus: walletAmount > 0 ? 1 : 0,
                 WalletPayment: walletAmount,                
                 TodaySaving: SavingsAmount,
                 Grossamt: Number(TotalPrice),
-                NetAmount: Number(TotalPrice),                                 
+                NetAmount: Number(TotalPrice) + Number(deliverycharge),                                 
                 SaleOrderDetails: OrderDetails,     
                 Remarks: "",                    
             },
         ];
-        console.log(master)
+       
         await InsertSaleOrderSave(master);
 
-        console.log(master)
+    
     };
 
     return (
         <>
             <CircularLoader showLoader={showLoader} />
             {OnlinePayment && (
-                <RazorpayPayment PlaceOrder={PlaceOrder} OnlinePayment={OnlinePayment} payableamount={(TotalPrice + DeliveryFee + HandlingCharge - ExtraDiscount)} usedwalledamount={walletAmount} Customer={selectedAddress}/>
+                <RazorpayPayment PlaceOrder={PlaceOrder} OnlinePayment={OnlinePayment} payableamount={(TotalPrice + deliverycharge + HandlingCharge - ExtraDiscount)} usedwalledamount={walletAmount} Customer={selectedAddress}/>
             )}
             <AddressChangeModal UserId={UserId} setUserId={setUserId} ModalOpen={ModalOpen} handleChangeAddressClose={handleChangeAddressClose} handleAddressSelect={handleChangeAddress} />
             <Modal
@@ -672,12 +743,12 @@ export default function ProductCheckout() {
                                     </Typography>
                                 </Grid>
 
-                                <Grid item xs={8} sx={{ display: 'none', mt: 0.5 }}>
+                                <Grid item xs={8} sx={{  mt: 0.5 }}>
                                     <Typography sx={{ fontSize: '14px', borderBottom: 'dashed 1px lightgray', display: 'inline' }} variant="body1">Delivery fee:</Typography>
                                 </Grid>
-                                <Grid item xs={4} sx={{ display: 'none', mt: 0.5 }}>
+                                <Grid item xs={4} sx={{  mt: 0.5 }}>
                                     <Typography sx={{ fontSize: '14px' }} variant="body1" align="right">
-                                        {DeliveryFee.toLocaleString('en-IN', { style: 'currency', currency: ServerURL.CURRENCY, minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                        {deliverycharge.toLocaleString('en-IN', { style: 'currency', currency: ServerURL.CURRENCY, minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </Typography>
                                 </Grid>
 
@@ -686,7 +757,7 @@ export default function ProductCheckout() {
                                 </Grid>
                                 <Grid item xs={4} sx={{ mt: 0.5 }}>
                                     <Typography sx={{ fontSize: '14px' }} variant="body1" align="right">
-                                        {(TotalPrice + DeliveryFee + HandlingCharge - ExtraDiscount).toLocaleString('en-IN', { style: 'currency', currency: ServerURL.CURRENCY, minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                        {(TotalPrice + deliverycharge + HandlingCharge - ExtraDiscount).toLocaleString('en-IN', { style: 'currency', currency: ServerURL.CURRENCY, minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </Typography>
                                 </Grid>
                             </Grid>

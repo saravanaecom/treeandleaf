@@ -378,6 +378,7 @@ export default function ProductCheckout() {
             if (response.length !== 0) {
                 setLoading(false);
                 localStorage.removeItem('cartItems');
+                localStorage.removeItem('DiscountData');
                 setCartItems([]);
                 setInfoStatus('Your order has been placed');
                 setShowLoader(false);
@@ -466,7 +467,8 @@ export default function ProductCheckout() {
                 Remarks: "",                    
             },
         ];
-       
+        console.log(deliverycharge)
+        console.log(master)
         await InsertSaleOrderSave(master);
 
     
@@ -742,6 +744,16 @@ export default function ProductCheckout() {
                                         {HandlingCharge.toLocaleString('en-IN', { style: 'currency', currency: ServerURL.CURRENCY, minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </Typography>
                                 </Grid>
+                                  
+                                <Grid item xs={8} sx={{  mt: 0.5 }}>
+                                    <Typography sx={{ fontSize: '14px', borderBottom: 'dashed 1px lightgray', display: 'inline' }} variant="body1">Coupon Discount:</Typography>
+                                </Grid>
+                                <Grid item xs={4} sx={{  mt: 0.5 }}>
+                                    <Typography sx={{ fontSize: '14px' }} variant="body1" align="right">
+                                        {discountAmount.toLocaleString('en-IN', { style: 'currency', currency: ServerURL.CURRENCY, minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                    </Typography>
+                                </Grid>
+                                
 
                                 <Grid item xs={8} sx={{  mt: 0.5 }}>
                                     <Typography sx={{ fontSize: '14px', borderBottom: 'dashed 1px lightgray', display: 'inline' }} variant="body1">Delivery fee:</Typography>
@@ -752,12 +764,14 @@ export default function ProductCheckout() {
                                     </Typography>
                                 </Grid>
 
+
+
                                 <Grid item xs={8} sx={{ mt: 0.5 }}>
                                     <Typography sx={{ fontSize: '14px', borderBottom: 'dashed 1px lightgray', display: 'inline' }} variant="body1">Total Amount</Typography>
                                 </Grid>
                                 <Grid item xs={4} sx={{ mt: 0.5 }}>
                                     <Typography sx={{ fontSize: '14px' }} variant="body1" align="right">
-                                        {(TotalPrice + deliverycharge + HandlingCharge - ExtraDiscount).toLocaleString('en-IN', { style: 'currency', currency: ServerURL.CURRENCY, minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                        {(TotalPrice + deliverycharge + HandlingCharge ).toLocaleString('en-IN', { style: 'currency', currency: ServerURL.CURRENCY, minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </Typography>
                                 </Grid>
                             </Grid>

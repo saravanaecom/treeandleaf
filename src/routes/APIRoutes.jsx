@@ -4,12 +4,24 @@ export const APIRoutes = {
     //Settings API
     GET_SETTINGS_DETAILS: `${ServerURL.PRODUCTION_HOST_URL}/api/WebMobileApp//SelectSettingsNew1`,
     GET_DELIVERY_TIMES: `${ServerURL.PRODUCTION_HOST_URL}/api/DeliveryChargesApp/SelectDeliveryTime`,
-    GET_SELECTSETTINGS: `${ServerURL.PRODUCTION_HOST_URL}/api/WebMobileApp//SelectSettingsNew1`,
+    GET_SELECTSETTINGS: `${ServerURL.PRODUCTION_HOST_URL}/api/WebMobileApp/SelectSettingsNew1`,
+
+
+
+    //GET Deliveryaddress
+    GET_DELIVERYCHARGE: `${ServerURL.PRODUCTION_HOST_URL}/api/DeliveryChargesApp/SelectDeliveryCharges`,
+
+
+   
+    // pincode
+
+    GET_PINCODE: `${ServerURL.PRODUCTION_HOST_URL}/api/WebMobileApp/SelectDeliveryArea`,
     //Authentication API's
     APP_CHECK_EXISTING_USER: `${ServerURL.PRODUCTION_HOST_URL}api/WebMobileApp/AppEmailMobileCheck`,
     APP_REGISTER_USER: `${ServerURL.PRODUCTION_HOST_URL}api/CustomerApp/InsertCustomer`,
     APP_LOGIN_USER: `${ServerURL.PRODUCTION_HOST_URL}api/WebMobileApp/Login`,
-    APP_FORGET_PASSWORD: `${ServerURL.PRODUCTION_HOST_URL}api/WebMobileApp/ForgetPassword`,    
+    APP_FORGET_PASSWORD: `${ServerURL.PRODUCTION_HOST_URL}api/WebMobileApp/ForgetPassword`,
+    APP_OTPVERIFY: `${ServerURL.PRODUCTION_HOST_URL}/api/CustomerApp/Otpverification`,    
 
     //User details for address, orders, wallets, profile etc..
     GET_MY_ORDERS: `${ServerURL.PRODUCTION_HOST_URL}api/WebMobileApp/MyOrder`,
@@ -23,6 +35,7 @@ export const APIRoutes = {
     UPDATE_CUSTOMER_PASSWORD: `${ServerURL.PRODUCTION_HOST_URL}api/WebMobileApp/UpdateCustomerPassword`,
 
     GET_COUPONVALUE: `${ServerURL.PRODUCTION_HOST_URL}api/WebMobileApp/SelectCoupondata`, 
+    GET_SALECOUPONVALUE: `${ServerURL.PRODUCTION_HOST_URL}/api/WebMobileApp/Selectsaleordercoupon`, 
 
     //Sale order 
     INSERT_SALE_ORDER_SAVE: `${ServerURL.PRODUCTION_HOST_URL}api/WebMobileApp/InsertSaleOrderSave`,

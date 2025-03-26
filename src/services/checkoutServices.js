@@ -63,7 +63,6 @@ export const API_InsertSaleOrderSave = async (objlist,WhatsAppUrl, OwnerMobileNo
 };
 
 
-
 export const FetchCoupons = async (objlist) => {
   try {
     const response = await fetch(`${APIRoutes.GET_COUPONVALUE}`, {
@@ -86,6 +85,30 @@ export const FetchCoupons = async (objlist) => {
     }
 
     return data; // Return the array directly
+  } catch (error) {
+    console.error('Failed to fetch details:', error);
+    throw error; // Re-throw so the calling function can handle it
+  }
+};
+
+
+
+export const Fetchsalecoupon = async (objlist) => {
+  try {
+    const response = await fetch(`${APIRoutes.GET_SALECOUPONVALUE}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+      },
+      body: JSON.stringify(objlist),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok.');
+    }
+
+    const data = await response.json();
+    return data; 
   } catch (error) {
     console.error('Failed to fetch details:', error);
     throw error; // Re-throw so the calling function can handle it

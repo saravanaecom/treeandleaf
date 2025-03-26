@@ -56,6 +56,50 @@ export const registerUser = async (userDetails) => {
   }
 };
 
+
+
+//Function to  OTP Verification
+export const otpverification = async (WhatsAppUrl, mobileno) => {
+  let objData = "";
+  let objlist = {
+    MobileNo: mobileno,
+  };
+
+  const apiEndpoint = APIRoutes.APP_OTPVERIFY;
+
+  try {
+    const response = await fetch(apiEndpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', 
+        Whatsappaccountid: WhatsAppUrl,
+        objData: objData,
+      },
+      body: JSON.stringify([objlist]),  
+    });
+
+    const data = await response.json(); // Parse the response as JSON
+    if (response.ok) {      
+      return data; // Returning API response after successful request
+    } else {
+      console.error("Failed to verify OTP.");
+      return data;  // Return any response data in case of failure
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    throw new Error("An error occurred while sending OTP.");
+  }
+};
+
+
+
+
+
+
+
+
+
+
 // Function to login the user
 export const loginUser = async (mobileNumber, password) => {
   const apiEndpoint = APIRoutes.APP_LOGIN_USER;

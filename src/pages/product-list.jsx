@@ -7,7 +7,7 @@ import ProductCard from '../components/ProductCard';
 import { API_FetchOfferFastMovingProduct, API_FetchNewProduct, API_FetchProductIdMoreItems, API_FetchProductByCategory, API_FetchProductBySubCategory, API_FetchBrand } from '../services/productListServices';
 import { API_FetchCategorySubCategory } from '../services/categoryServices';
 import { ImagePathRoutes } from '../routes/ImagePathRoutes';
-import { styled } from '@mui/system';
+import { positions, styled } from '@mui/system';
 import { useTheme } from '@mui/material/styles';
 import AllCategory from '../assets/alc.jpg';
 //import PlayStrore from '../../D:\KarthikWorkSpace\ReactProject\treeandleef\ecommercev7_frontend-main\src\assets\alc.jpg';
@@ -193,98 +193,98 @@ const ProductList = () => {
       setProductLists(filteredProducts);
     }
   };
-  // useEffect(() => {
-  //   // Parse query parameters from the URL
-  //   const queryParams = new URLSearchParams(location.search);
-  //   const encodedId = queryParams.get('pcid');
-  //   const encodedName = queryParams.get('pcname');
-  //   const encodedSId = queryParams.get('pscid');
-  //   const encodedSName = queryParams.get('pscname');
-
-  //   // Guard clause: if there's no pcid, do nothing
-  //   if (!encodedId) return;
-
-  //   // Decode parameters (if they exist)
-  //   const decodedId = decodeURIComponent(encodedId);
-  //   const decodedName = encodedName ? decodeURIComponent(encodedName) : null;
-  //   const decodedSId = encodedSId ? decodeURIComponent(encodedSId) : null;
-  //   const decodedSName = encodedSName ? decodeURIComponent(encodedSName) : null;
-
-  //   // Update state with the decoded values
-  //   setCategoryId(decodedId);
-  //   setCategoryName(decodedName);
-  //   setSubCategoryId(decodedSId);
-  //   setSubCategoryName(decodedSName);
-
-  //   // Get the product category id from base64 encoding
-  //   const productId = atob(encodedId);
-
-  //   // Fetch category info if not a new_product
-  //   if (productId !== 'new_product') {
-  //     GetCategoryBySubCategory(productId);
-  //   }
-
-  //   // Determine which product list to fetch:
-  //   // If subcategory information is provided and valid, load by subcategory;
-  //   // otherwise, load all products.
-  //   if (decodedSId && decodedSName && decodedSName !== "All Products") {
-  //     setActiveCategory(decodedSName);
-  //     GetProductListsBySubCategory(atob(encodedSId), Multipleitems, Startindex, PageCount);
-  //   } else {
-  //     setActiveCategory("All Products");
-  //     GetProductLists(productId, Multipleitems, Startindex, PageCount);
-  //   }
-
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [location.search]);
-
-
-
-
   useEffect(() => {
+    // Parse query parameters from the URL
     const queryParams = new URLSearchParams(location.search);
     const encodedId = queryParams.get('pcid');
     const encodedName = queryParams.get('pcname');
     const encodedSId = queryParams.get('pscid');
     const encodedSName = queryParams.get('pscname');
 
-    const decodedId = encodedId ? decodeURIComponent(encodedId) : null;
+    // Guard clause: if there's no pcid, do nothing
+    if (!encodedId) return;
+
+    // Decode parameters (if they exist)
+    const decodedId = decodeURIComponent(encodedId);
     const decodedName = encodedName ? decodeURIComponent(encodedName) : null;
     const decodedSId = encodedSId ? decodeURIComponent(encodedSId) : null;
     const decodedSName = encodedSName ? decodeURIComponent(encodedSName) : null;
 
+    // Update state with the decoded values
     setCategoryId(decodedId);
     setCategoryName(decodedName);
     setSubCategoryId(decodedSId);
     setSubCategoryName(decodedSName);
 
-    if(atob(encodedId) !== 'new_product'){
-      GetCategoryBySubCategory(atob(encodedId));
-    }    
+    // Get the product category id from base64 encoding
+    const productId = atob(encodedId);
 
-
-
-
-    if (encodedSId === null) {
-      setActiveCategory("All Products");
-      GetProductLists(atob(encodedId), Multipleitems, Startindex, PageCount);
-    }
-    if (encodedSName === 'All%20Products') {
-      setActiveCategory("All Products");
-      GetProductLists(atob(encodedId), Multipleitems, Startindex, PageCount);
+    // Fetch category info if not a new_product
+    if (productId !== 'new_product') {
+      GetCategoryBySubCategory(productId);
     }
 
-    if (decodedSId) {
-      setActiveCategory(decodedSName); // Set active category to pscname (e.g., "SUGAR")
+    // Determine which product list to fetch:
+    // If subcategory information is provided and valid, load by subcategory;
+    // otherwise, load all products.
+    if (decodedSId && decodedSName && decodedSName !== "All Products") {
+      setActiveCategory(decodedSName);
       GetProductListsBySubCategory(atob(encodedSId), Multipleitems, Startindex, PageCount);
     } else {
       setActiveCategory("All Products");
-      GetProductLists(atob(encodedId), Multipleitems, Startindex, PageCount);
+      GetProductLists(productId, Multipleitems, Startindex, PageCount);
     }
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search]);
 
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.search, categoryId, categoryName, Multipleitems, Startindex, PageCount]);
+
+
+
+  // useEffect(() => {
+  //   const queryParams = new URLSearchParams(location.search);
+  //   const encodedId = queryParams.get('pcid');
+  //   const encodedName = queryParams.get('pcname');
+  //   const encodedSId = queryParams.get('pscid');
+  //   const encodedSName = queryParams.get('pscname');
+
+  //   const decodedId = encodedId ? decodeURIComponent(encodedId) : null;
+  //   const decodedName = encodedName ? decodeURIComponent(encodedName) : null;
+  //   const decodedSId = encodedSId ? decodeURIComponent(encodedSId) : null;
+  //   const decodedSName = encodedSName ? decodeURIComponent(encodedSName) : null;
+
+  //   setCategoryId(decodedId);
+  //   setCategoryName(decodedName);
+  //   setSubCategoryId(decodedSId);
+  //   setSubCategoryName(decodedSName);
+
+  //   if(atob(encodedId) !== 'new_product'){
+  //     GetCategoryBySubCategory(atob(encodedId));
+  //   }    
+
+
+
+
+  //   if (encodedSId === null) {
+  //     setActiveCategory("All Products");
+  //     GetProductLists(atob(encodedId), Multipleitems, Startindex, PageCount);
+  //   }
+  //   if (encodedSName === 'All%20Products') {
+  //     setActiveCategory("All Products");
+  //     GetProductLists(atob(encodedId), Multipleitems, Startindex, PageCount);
+  //   }
+
+  //   if (decodedSId) {
+  //     setActiveCategory(decodedSName); // Set active category to pscname (e.g., "SUGAR")
+  //     GetProductListsBySubCategory(atob(encodedSId), Multipleitems, Startindex, PageCount);
+  //   } else {
+  //     setActiveCategory("All Products");
+  //     GetProductLists(atob(encodedId), Multipleitems, Startindex, PageCount);
+  //   }
+
+
+  //   //eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [location.search, categoryId, categoryName, Multipleitems, Startindex, PageCount]);
 
 
 
@@ -336,33 +336,28 @@ const ProductList = () => {
 
   // Apply filtering logic whenever the product list or filter name changes
   useEffect(() => {
+    if (!productLists.length) return;
+  
     let sortedProducts = [...productLists];
-  
-    // Apply filter logic only if the product list is populated
-    if (productLists && productLists.length > 0) {
-      switch (productFilterName) {
-        case "Price(Low > High)":
-          sortedProducts.sort((a, b) => a.Price - b.Price);
-          break;
-        case "Price(High > Low)":
-          sortedProducts.sort((a, b) => b.Price - a.Price);
-          break;
-        case "A-Z":
-          sortedProducts.sort((a, b) => a.Description.localeCompare(b.Description));
-          break;
-        case "Z-A":
-          sortedProducts.sort((a, b) => b.Description.localeCompare(a.Description));
-          break;
-          case "All products":
-            sortedProducts.sort((a, b) => a.Description.localeCompare(b.Description));
-          break;
-        default:
-          break;
-      }
-      setProductLists(sortedProducts);
+    switch (productFilterName) {
+      case "Price(Low > High)":
+        sortedProducts.sort((a, b) => a.Price - b.Price);
+        break;
+      case "Price(High > Low)":
+        sortedProducts.sort((a, b) => b.Price - a.Price);
+        break;
+      case "A-Z":
+        sortedProducts.sort((a, b) => a.Description.localeCompare(b.Description));
+        break;
+      case "Z-A":
+        sortedProducts.sort((a, b) => b.Description.localeCompare(a.Description));
+        break;
+      default:
+        break;
     }
-  }, [productFilterName, productLists]);
   
+    setProductLists(sortedProducts);
+  }, [productFilterName]);
   
 
   useEffect(() => {
@@ -387,11 +382,11 @@ const ProductList = () => {
       <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={backdropOpen}>
         <CircularProgress color="inherit" />
       </Backdrop>
-      <Container maxWidth="xl" sx={{ px: { xs: 0, md: 3 } }}>
+      <Container maxWidth="xl" sx={{ px: { xs: 0, md: 3 } ,mt: {xs:0 ,md: 7} }}>
         <Grid container>
           {/* Left-side Drawer for larger screens */}
           {(offerProducts === null && relatedProducts === null && newProducts === null) && (
-            <Grid item xs={12} md={2} sx={{ display: { xs: 'none', md: 'block' }, zIndex: 10 }} style={{ position: 'sticky', top: 80, height: '100vh' }}>
+            <Grid item xs={12} md={2} sx={{ display: { xs: 'none', md: 'block' } }} style={{ position: 'sticky',  height: '100vh' }}>
               <Drawer
                 variant="permanent"
                 sx={{
@@ -458,8 +453,10 @@ const ProductList = () => {
           )}
 
           {/* Mobile Drawer Toggle Button */}
+       
+
           {(offerProducts === null && relatedProducts === null && newProducts === null) && (
-            <Grid item xs={12} md={2} sx={{ display: { xs: 'block', md: 'none' }, position: 'sticky', top: 0, height: '100vh' }}>
+            <Grid item xs={2} md={2} sx={{ display: { xs: 'flex', md: 'none' }, position: 'sticky', top: 0,  }}>
               <Drawer
                 variant="permanent"
                 sx={{
@@ -469,7 +466,13 @@ const ProductList = () => {
                   '& .MuiDrawer-paper': {
                     width: '80px',
                     boxSizing: 'border-box',
-                    position: "relative",
+                    height: '100%', // Adjust height to avoid white space
+                    display: 'flex',
+                    flexDirection: 'column',
+                    overflowY: 'auto', 
+                    position: "fixed",
+                    top: 150,
+                   
                   },
                 }}
               >
@@ -499,6 +502,9 @@ const ProductList = () => {
               </Drawer>
             </Grid>
           )}
+
+
+
           {/* Right-side Content Area */}
           <Grid item xs={12} md={offerProducts === null && relatedProducts === null && newProducts === null ? 10 : 12} sx={{ p: 3 }}>
             <Grid container sx={{ px: { xs: 0, md: 0 }, justifyContent: "flex-start", gap: "0px 18px" }}>
@@ -509,7 +515,10 @@ const ProductList = () => {
                 sx={{
                   width: "100%",
                   display: "flex",
+                  flexDirection: { xs: "column", md: "row" },
                   justifyContent: "space-between",
+                  position: "relative",
+                  left: { xs: 80, md: 0 },
                   alignItems: "center",
                 }}
               >
@@ -530,7 +539,8 @@ const ProductList = () => {
                 {/* Filters Section */}
                 <Box
                   sx={{
-                    width: { xs: "100%", md: "auto" },
+                    width: { xs: "50%", md: "auto" },
+                 
                     display: "flex",
                     flexDirection: { xs: "column", md: "row" },
                     justifyContent: "space-between",
@@ -547,7 +557,7 @@ const ProductList = () => {
                         maxWidth: "100%",
                       }}
                     >
-                      {/* <FormControl fullWidth>
+                      <FormControl fullWidth>
                           <Select
                             id="brandFilter"
                             value={selectedBrand}
@@ -566,11 +576,9 @@ const ProductList = () => {
                               </MenuItem>
                             ))}
                           </Select>
-                        </FormControl> */}
+                        </FormControl>
                     </Box>
                   )}
-
-
                   {/* Product Filter */}
                   <Box
                     sx={{
@@ -602,45 +610,37 @@ const ProductList = () => {
               </Box>
 
               {/* Render filtered product list */}
-              <div
-                className={
-                  offerProducts === null &&
-                    relatedProducts === null &&
-                    newProducts === null
-                    ? "grid h-full w-full grid-cols-2 content-start gap-x-3 overflow-auto md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 pb-24 no-scrollbar"
-                    : "grid h-full w-full grid-cols-2 content-start gap-x-3 overflow-auto md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 pb-24 no-scrollbar"
-                }
-              >
-                {loading ? (
-                  // Show loading indicator while fetching
-                  <Box display="flex" justifyContent="center" alignItems="center" width="100%">
-                    {/* <CircularProgress /> */}
-                  </Box>
-                ) : productLists.length > 0 ? (
-                  productLists.map((product) => (
-                    <Box key={product.id} sx={{ mb: 3 }}>
-                      <ProductCard
-                        product={product}
-                        isLoading={loading}
-                        offerProducts={offerProducts}
-                        relatedProducts={relatedProducts}
-                        newProducts={newProducts}
-                      />
-                    </Box>
-                  ))
-                ) : (
-                  // Show "No products available." only if not loading
-                  !loading &&
-                  !backdropOpen && (
-                    <Typography
-                      variant="h6"
-                      sx={{ mt: 3, width: "100%", textAlign: "center", color: theme.palette.basecolorCode.main }}
-                    >
-                      No products available.
-                    </Typography>
-                  )
-                )}
-              </div>
+              <Grid container spacing={2} >
+          {loading ? (
+         <Box display="flex" justifyContent="center" alignItems="center" width="100%">
+          <CircularProgress />
+      </Box>
+     ) : productLists.length > 0 ? (
+    productLists.map((product) => (
+      <Grid item xs={12} md={3} key={product.id} sx={{  position:{xs:"relative"},left:{xs:50}}}> {/* Each card takes half the row */}
+        <ProductCard
+          product={product}
+          isLoading={loading}
+          offerProducts={offerProducts}
+          relatedProducts={relatedProducts}
+          newProducts={newProducts}
+        />
+      </Grid>
+    ))
+  ) : (
+    <Typography
+      variant="h6"
+      sx={{
+        mt: 3,
+        width: "100%",
+        textAlign: "center",
+        color: theme.palette.basecolorCode.main,
+      }}
+    >
+      No products available.
+    </Typography>
+  )}
+</Grid>
 
             </Grid>
           </Grid>

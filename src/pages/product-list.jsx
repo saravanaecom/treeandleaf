@@ -55,6 +55,7 @@ const ProductList = () => {
   const [brands, setBrands] = useState([]);
   const [fullProductList, setFullProductList] = useState([])
   const [selectedBrand, setSelectedBrand] = useState("All brands");
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const [productFilterName, setProductFilterName] = useState('All products');
 
@@ -193,6 +194,19 @@ const ProductList = () => {
       setProductLists(filteredProducts);
     }
   };
+
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 150);
+    };
+  
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   useEffect(() => {
     // Parse query parameters from the URL
     const queryParams = new URLSearchParams(location.search);
@@ -456,13 +470,13 @@ const ProductList = () => {
        
 
           {(offerProducts === null && relatedProducts === null && newProducts === null) && (
-            <Grid item xs={2} md={2} sx={{ display: { xs: 'flex', md: 'none' }, position: 'sticky', top: 0,  }}>
+            <Grid item xs={2} md={2} sx={{ display: { xs: 'flex', md: 'none' }, position: '', top: 0 }}>
               <Drawer
                 variant="permanent"
                 sx={{
                   width: '80px',
                   flexShrink: 0,
-                  position: "relative",
+                  position: "sticky",
                   '& .MuiDrawer-paper': {
                     width: '80px',
                     boxSizing: 'border-box',
@@ -471,7 +485,7 @@ const ProductList = () => {
                     flexDirection: 'column',
                     overflowY: 'auto', 
                     position: "fixed",
-                    top: 150,
+                    top: isScrolled ? 100 : 250,
                    
                   },
                 }}

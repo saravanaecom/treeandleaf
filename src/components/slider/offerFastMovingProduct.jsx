@@ -98,7 +98,7 @@ const OfferFastMovingProduct = (props) => {
         breakpoint: 600,
         settings: {
           arrows: false,
-          slidesToShow: 2,
+          slidesToShow: 1,
           slidesToScroll: 1,
         }
       }

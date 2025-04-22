@@ -325,6 +325,10 @@ export default function AppRegister({ RegisterDrawerOpen, setLoginDrawerOpen, ha
                 className="mb-4"
                 required
               />
+
+                 <Typography variant="body2" align="left" className="mb-4">
+                OTP sent to your What'sApp . Please enter it above.
+              </Typography>
               <Button 
                 fullWidth
                 variant="contained"
